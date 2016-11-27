@@ -7,9 +7,11 @@ const profanity = new (require('bad-words'))()
 const Rx = require('node-keyboard-rx')()
 
 module.exports = {
-
-    trackAndHighlight({ track, minFollowers }) {
-
+    // Play music from tweets!
+    // Enter the "track" to match (see https://dev.twitter.com/streaming/overview/request-parameters#track) and
+    // the "minFollowers" of the tweeter to include.
+    // Ex: twitter.searchAndHighlight({ track: 'bieber', minFollowers: 100 }).subscribe(play)
+    searchAndHighlight({ track, minFollowers }) {
         const readable = twitterSentiment({ track, minFollowers })
 
         const tweets = Rx.Observable.fromEvent(readable, 'data')
@@ -27,8 +29,15 @@ module.exports = {
             .finally(() => readable.emit('destroy'))
             .map(tweet => 48 + tweet.sentiment.score)
             .flatMap(note => [ note, note + 12 ])
+    },
+
+    //
+    search({ track, minFollowers }) {
+        const readable = twitterSentiment({ track, minFollowers })
+
+        const tweets = Rx.Observable.fromEvent(readable, 'data').finally(() => readable.emit('destroy'))
+
+        return tweets.map(tweet => 48 + tweet.sentiment.score).flatMap(note => [ note, note + 12 ])
     }
 }
-
-// talk_14_rt({ track: 'bieber', minFollowers: 500 }), undefined
 
