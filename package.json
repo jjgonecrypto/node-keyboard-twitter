@@ -1,0 +1,27 @@
+{
+  "name": "node-keyboard-twitter",
+  "version": "1.0.0",
+  "description": "Twitter sentiment tracking plugin for node-keyboard",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint ."
+  },
+  "keywords": [
+    "node-keyboard-twitter"
+  ],
+  "author": "justin j. moses <justinjmoses@gmail.com>",
+  "license": "MIT",
+  "repository": "justinjmoses/node-keyboard-twitter",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "dependencies": {
+    "bad-words": "https://github.com/justinjmoses/badwords/tarball/42cac7400716489c5b56b08c0cba0bcc0d3b177f",
+    "chalk": "^1.1.3",
+    "node-keyboard-rx": "^1.0.1",
+    "twitter-sentiment": "^1.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.9.1"
+  }
+}
