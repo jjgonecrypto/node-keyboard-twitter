@@ -11,12 +11,12 @@ Twitter sentiment tracking plugin for [node-keyboard](https://github.com/justinj
 ###As Global
 If you installed node-keyboard globally, then install this plugin via `npm i -g node-keyboard-twitter`
 
-Then start node keyboard via `node-keyboard`, and import this plugin via `const twitter = requireg('node-keyboard-twitter')()`
+Then start node keyboard via `node-keyboard`, and import this plugin via `const twitter = requireg('node-keyboard-twitter')`
 
 ###As Local
 If instead you cloned node-keyboard, then install locally in that folder via `npm i node-keyboard-twitter`
 
-Then start node keyboard via `node keyboard` and import this plugin via `const twitter = require('node-keyboard-twitter')()`
+Then start node keyboard via `node keyboard` and import this plugin via `const twitter = require('node-keyboard-twitter')`
 
 ##Usage
 1. Ensure your environment variables for Twitter API usage are set. See https://github.com/justinjmoses/twitter-sentiment#installation 
