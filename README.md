@@ -24,10 +24,8 @@ Then start node keyboard via `node keyboard` and import this plugin via `const t
 2. Try out the twitter sentiment tracker by adding the `track` field (see [Twitter API for input options](https://dev.twitter.com/streaming/overview/request-parameters#track)) and the `minFollowers` that the account needs to have to be used.
 
 ```javascript
-twitter.searchAndHighlight({ track: 'bieber', minFollowers: 100 )}).subscribe(play)
+twitter.search({ track: 'bieber', minFollowers: 100 }).do(twitter.log.sentiment).map(twitter.map.toMusic).subscribe(play)
 ```
-
-![twitter](https://cloud.githubusercontent.com/assets/799038/20651854/3049bf5a-b4bb-11e6-8af7-d91b7fd1f1e1.gif)
 
 For a longer recording, checkout https://vid.me/MYR5
 

@@ -7,37 +7,40 @@ const profanity = new (require('bad-words'))()
 const Rx = require('node-keyboard-rx')()
 
 module.exports = {
-    // Play music from tweets!
     // Enter the "track" to match (see https://dev.twitter.com/streaming/overview/request-parameters#track) and
     // the "minFollowers" of the tweeter to include.
-    // Ex: twitter.searchAndHighlight({ track: 'bieber', minFollowers: 100 }).subscribe(play)
-    searchAndHighlight({ track, minFollowers }) {
-        const readable = twitterSentiment({ track, minFollowers })
-
-        const tweets = Rx.Observable.fromEvent(readable, 'data')
-
-        const cleaner = profanity.clean.bind(profanity)
-
-        const { stdout } = process
-
-        return tweets
-            .do(({ sentiment }) => {
-                stdout.write(`score: ${sentiment.score}, comparative: ${sentiment.comparative.toFixed(2)}`)
-                stdout.write(` ${chalk.green(sentiment.positive.map(cleaner).join(' '))}`)
-                stdout.write(` ${chalk.red(sentiment.negative.map(cleaner).join(' '))}\n`)
-            })
-            .finally(() => readable.emit('destroy'))
-            .map(tweet => 48 + tweet.sentiment.score)
-            .flatMap(note => [ note, note + 12 ])
-    },
-
-    //
+    // Ex: twitter.search({ track: 'bieber', minFollowers: 100 }).do(twitter.log.sentiment).flatMap(twitter.map.toMusic).subscribe(play)
     search({ track, minFollowers }) {
         const readable = twitterSentiment({ track, minFollowers })
 
-        const tweets = Rx.Observable.fromEvent(readable, 'data').finally(() => readable.emit('destroy'))
+        return Rx.Observable.stream(readable).finally(() => readable.emit('destroy'))
+    },
 
-        return tweets.map(tweet => 48 + tweet.sentiment.score).flatMap(note => [ note, note + 12 ])
+    map: {
+        toMusic(tweet) {
+            const note = 48 + tweet.sentiment.score
+            return [note, note + 12]
+        }
+    },
+
+    log: {
+        summary({ text, user, entities, favorite_count, retweet_count, sentiment }) {
+            process.stdout.write(`{
+                text: ${chalk.green(text.replace(/\n/, ''))},
+                user: { name: ${chalk.red(user.screen_name)}, followers: ${chalk.blue(user.followers_count)} },
+                retweet_count: ${chalk.yellow(retweet_count)}, favorite_count: ${chalk.yellow(favorite_count)}, sentiment: ${chalk.green(sentiment.score)},
+                entities: ${Object.keys(entities)}
+            }\n`)
+        },
+
+        sentiment({ sentiment: { score, comparative, positive, negative }}) {
+            const { stdout } = process
+            const cleaner = profanity.clean.bind(profanity)
+
+            stdout.write(`score: ${score}, comparative: ${comparative.toFixed(2)}`)
+            stdout.write(` ${chalk.green(positive.map(cleaner).join(' '))}`)
+            stdout.write(` ${chalk.red(negative.map(cleaner).join(' '))}\n`)
+        }
     }
 }
 
