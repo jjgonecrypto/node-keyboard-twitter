@@ -1,10 +1,13 @@
 'use strict'
 
 const chalk = require('chalk')
+const path = require('path')
 const twitterSentiment = require('twitter-sentiment')
 
 const profanity = new (require('bad-words'))()
 const Rx = require('node-keyboard-rx')()
+
+const examples = require('node-examples')
 
 module.exports = {
     // Enter the "track" to match (see https://dev.twitter.com/streaming/overview/request-parameters#track) and
@@ -44,3 +47,4 @@ module.exports = {
     }
 }
 
+examples({ path: path.join(__dirname, 'examples'), prefix: 'twitter_example_' })
